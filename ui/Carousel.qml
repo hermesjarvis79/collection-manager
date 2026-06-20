@@ -2,9 +2,9 @@
  * Collection Manager — Carousel Stage
  * Displays the selected movie with cinematic lighting effects.
  * Full-color cover art with spotlight and ambient glow.
+ * Compatible with Qt6 / PyQt6 — no Qt5Compat dependencies.
  */
 import QtQuick
-import QtQuick.Effects
 import QtQuick.Layouts
 
 Rectangle {
@@ -12,27 +12,6 @@ Rectangle {
     color: "#0a0a0a"
 
     property var movie: null
-
-    // ── Cinematic Background Glow ──────────────────────────────────────
-    Rectangle {
-        id: bgGlow
-        anchors.centerIn: parent
-        width: parent.width * 0.8
-        height: parent.height * 0.9
-        radius: width / 2
-        color: "#000000"
-        visible: false  // used as shader source
-
-        // Radial gradient for spotlight effect
-        RadialGradient {
-            anchors.fill: parent
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: spotlightColor }
-                GradientStop { position: 0.4; color: Qt.rgba(spotColorR * 0.3, spotColorG * 0.3, spotColorB * 0.3, 0.5) }
-                GradientStop { position: 1.0; color: "transparent" }
-            }
-        }
-    }
 
     // Spotlight color derived from movie (default cyan)
     property real spotColorR: 0.0
@@ -46,7 +25,6 @@ Rectangle {
 
     function updateSpotlight() {
         if (movie) {
-            // Cycle through accent colors based on movie id for variety
             var colors = [
                 [0.0, 1.0, 1.0],   // cyan
                 [1.0, 0.0, 0.67],  // magenta
@@ -60,6 +38,25 @@ Rectangle {
             spotColorB = colors[idx][2]
             spotlightColor = Qt.rgba(spotColorR, spotColorG, spotColorB, 0.15)
         }
+    }
+
+    // ── Cinematic Background Glow (simulated with layered rectangles) ──────
+    Rectangle {
+        anchors.centerIn: parent
+        width: parent.width * 0.7
+        height: parent.height * 0.8
+        radius: width / 2
+        color: spotlightColor
+        opacity: 0.3
+    }
+
+    Rectangle {
+        anchors.centerIn: parent
+        width: parent.width * 0.4
+        height: parent.height * 0.5
+        radius: width / 2
+        color: spotlightColor
+        opacity: 0.2
     }
 
     // ── Content Layout ─────────────────────────────────────────────────
@@ -115,14 +112,17 @@ Rectangle {
                 }
             }
 
-            // Spotlight glow behind cover
-            RectangularGlow {
-                anchors.fill: coverImage
-                glowRadius: 20
-                spread: 0.2
-                color: spotlightColor
-                cornerRadius: 6
+            // Glow border behind cover (simulated)
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: -3
+                color: "transparent"
+                border.color: spotlightColor
+                border.width: 2
+                radius: 8
+                opacity: 0.4
                 visible: coverImage.status === Image.Ready
+                z: -1
             }
 
             // Subtle border
