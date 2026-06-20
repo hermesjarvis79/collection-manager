@@ -1,6 +1,14 @@
+# Core framework — PyQt6 includes QML support (no separate PyQt6-Qml package needed)
 PyQt6>=6.5.0
-PyQt6-Qml>=6.5.0
-watchdog>=3.0.0
-requests>=2.31.0
-python-dotenv>=1.0.0
-Pillow>=10.0.0
+
+# Filesystem monitoring
+watchdog>=6.0.0
+
+# HTTP requests for TMDB API
+requests>=2.34.0
+
+# Environment variable management
+python-dotenv>=1.2.0
+
+# Image processing (cover art handling)
+Pillow>=12.0.0
