@@ -192,8 +192,9 @@ def main():
     engine.rootContext().setContextProperty("watcherBridge", FolderWatcherBridge(watcher))
     engine.rootContext().setContextProperty("vlcBridge", VlcBridge(vlc))
 
-    # Load main QML
-    qml_path = Path(__file__).parent / "ui" / "main.qml"
+    # Load main QML — ui/ is at the project root (parent of src/)
+    project_root = Path(__file__).parent.parent
+    qml_path = project_root / "ui" / "main.qml"
     engine.load(QUrl.fromLocalFile(str(qml_path)))
 
     if not engine.rootObjects():
